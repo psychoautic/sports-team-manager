@@ -35,6 +35,7 @@ class Team:
 
     def __init__(self, name):
         self.name = name
+        self.coach = None
         self.players = []
         self.lineup = {}
         self.substitutes = []
@@ -47,6 +48,8 @@ class Team:
         }
 
     def add_player(self, player):
+        if any(p.number == player.number for p in self.players):
+            raise ValueError("Player number already exists in this team.")
         self.players.append(player)
         player.team = self
         self.substitutes.append(player)
