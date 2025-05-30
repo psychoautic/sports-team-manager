@@ -15,6 +15,14 @@ class Player:
             "Games_Played": 0
         }
 
+class StarPlayer(Player):  # ← Inherits from Player
+    def __init__(self, name, number, position, sponsorships=None):
+        super().__init__(name, number, position)
+        self.sponsorships = sponsorships or []
+
+    def market_value(self):
+        return 1000000 + len(self.sponsorships) * 50000
+
 class Team:
     FORMATIONS = {
         "4-4-2": ["GK", "RB", "CB1", "CB2", "LB", "RM", "CM1", "CM2", "LM", "ST1", "ST2"],
