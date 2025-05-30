@@ -1,5 +1,5 @@
 import customtkinter as ctk
-from models import Team, Player, Match
+from models import Team, Player, Coach
 from widgets import NumberCounter
 import tkinter.messagebox as messagebox
 
@@ -39,36 +39,40 @@ class TeamManagerApp(ctk.CTk):
         frame = ctk.CTkFrame(self.tab_team_initiation)
         frame.pack(padx=20, pady=20, fill="both", expand=True)
 
+        # Make columns 0 and 1 expand equally
+        frame.grid_columnconfigure(0, weight=1)
+        frame.grid_columnconfigure(1, weight=1)
+
         # Team name entry
         team_name_label = ctk.CTkLabel(frame, text="Team Name:")
-        team_name_label.grid(row=0, column=0, sticky="w", pady=5)
+        team_name_label.grid(row=0, column=0, sticky="e", pady=5)
         team_name_entry = ctk.CTkEntry(frame)
-        team_name_entry.grid(row=0, column=1, pady=5)
+        team_name_entry.grid(row=0, column=1, sticky="w", pady=5)
 
         coach_name_label = ctk.CTkLabel(frame, text="Coach Name:")
-        coach_name_label.grid(row=0, column=2, sticky="w", pady=5)
+        coach_name_label.grid(row=1, column=0, sticky="e", pady=5)
         coach_name_entry = ctk.CTkEntry(frame)
-        coach_name_entry.grid(row=0, column=3, pady=5)
+        coach_name_entry.grid(row=1, column=1, sticky="w", pady=5)
 
         # Player entry fields
         player_name_label = ctk.CTkLabel(frame, text="Player Name:")
-        player_name_label.grid(row=1, column=0, sticky="w", pady=5)
+        player_name_label.grid(row=2, column=0, sticky="e", pady=5)
         player_name_entry = ctk.CTkEntry(frame)
-        player_name_entry.grid(row=1, column=1, pady=5)
+        player_name_entry.grid(row=2, column=1, sticky="w", pady=5)
 
         player_number_label = ctk.CTkLabel(frame, text="Player Number:")
-        player_number_label.grid(row=2, column=0, sticky="w", pady=5)
+        player_number_label.grid(row=3, column=0, sticky="e", pady=5)
         self.player_number_counter = NumberCounter(frame, min_value=1, max_value=99, initial=10)
-        self.player_number_counter.grid(row=2, column=1, pady=5, sticky="ew")
+        self.player_number_counter.grid(row=3, column=1, sticky="w", pady=5)
 
         player_position_label = ctk.CTkLabel(frame, text="Player Position:")
-        player_position_label.grid(row=3, column=0, sticky="w", pady=5)
+        player_position_label.grid(row=4, column=0, sticky="e", pady=5)
         player_position_entry = ctk.CTkOptionMenu(frame, values=Player.POSITIONS)
-        player_position_entry.grid(row=3, column=1, pady=5)
+        player_position_entry.grid(row=4, column=1, sticky="w", pady=5)
 
-        # Listbox to show added players
+        # Listbox to show added players (centered, spanning both columns)
         player_listbox = ctk.CTkTextbox(frame, height=100, width=250)
-        player_listbox.grid(row=4, column=0, columnspan=2, pady=10)
+        player_listbox.grid(row=5, column=0, columnspan=2, pady=10, sticky="ew")
 
         # Temp storage for players before team creation
         self.temp_players = []
@@ -85,7 +89,7 @@ class TeamManagerApp(ctk.CTk):
                 return
             # Frontend check for duplicate number
             if any(p.number == number for p in self.temp_players):
-                messagebox.showwarning(title="Duplicate Number", message="This number is already used. Please choose another.", icon="warning")
+                messagebox.showwarning(title="Duplicate Number", message="This number is already used. Please choose another.")
                 return
             player = Player(name, number, position)
             self.temp_players.append(player)
@@ -99,22 +103,23 @@ class TeamManagerApp(ctk.CTk):
             if not team_name or not self.temp_players:
                 return
             team = Team(team_name)
+            team.coach = Coach(coach_name_entry.get())
             for player in self.temp_players:
                 team.add_player(player)
             self.teams[team_name] = team
-            team.
             # Reset for next team
             team_name_entry.delete(0, "end")
             player_listbox.delete("1.0", "end")
             self.temp_players.clear()
+            coach_name_entry.delete(0, "end")
 
         # Add Player button (centered)
         add_player_btn = ctk.CTkButton(frame, text="Add Player", command=add_player)
-        add_player_btn.grid(row=5, column=0, columnspan=2, pady=10, sticky="ew")
+        add_player_btn.grid(row=6, column=0, columnspan=2, pady=10, sticky="ew")
 
         # Create Team button (centered, below Add Player)
         create_team_btn = ctk.CTkButton(frame, text="Create Team", command=create_team)
-        create_team_btn.grid(row=6, column=0, columnspan=2, pady=10, sticky="ew")
+        create_team_btn.grid(row=7, column=0, columnspan=2, pady=10, sticky="ew")
 
     # ----------> Tab 2: Team Management <---------
     def build_team_management_tab(self):
