@@ -3,6 +3,7 @@ import random
 ### Start by defining Classes
 
 class Player:
+    POSITIONS = ['GK', 'CB', 'RB', 'LB', 'CM', 'CDM', 'CAM', 'RM', 'LM', 'RW', 'LW', 'ST']
     def __init__(self, name, number, position, team=None, attributes = None):
         self.name = name
         self.number = number
