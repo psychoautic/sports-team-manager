@@ -1,5 +1,7 @@
 import customtkinter as ctk
 
+
+### Tkinter does not have a built-in number counter widget, so we created our own!!
 class NumberCounter(ctk.CTkFrame):
     def __init__(self, master=None, min_value=0, max_value=99, initial=0, **kwargs):
         super().__init__(master, **kwargs)
